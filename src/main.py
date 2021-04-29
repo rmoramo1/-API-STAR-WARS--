@@ -165,7 +165,9 @@ def user(user):
         return jsonify({"msg": "no autorizado"})
 
 @app.route('/personajes', methods = ['GET'])
+@jwt_required
 def personajes():
+    currentUser = get_jwt_identity()
     if request.method == 'GET':
         records = Personajes.query.all()
         return jsonify([Personajes.serialize(record) for record in records]) #LLAMAR A TODOS
@@ -175,6 +177,7 @@ def personajes():
 #SOLO MANDA A LLAMAR A UNO SOLO 
 @app.route('/personajes/<personaje>/', methods = ['GET'])
 def personaje(personaje):
+
     if request.method == 'GET':
         records = Personajes.query.filter_by(id=personaje)  #FILTRA SOLAMENTE EL ID
         return jsonify([Personajes.serialize(record) for record in records])
